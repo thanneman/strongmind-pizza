@@ -1,48 +1,23 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/global/layout'
 
 const initialToppings = [
-    {
-        id: 1,
-        name: 'Pepperoni',
-    },
-    {
-        id: 2,
-        name: 'Sausage',
-    },
-    {
-        id: 3,
-        name: 'Mushrooms',
-    },
-    {
-        id: 4,
-        name: 'Onions',
-    },
-    {
-        id: 5,
-        name: 'Green Peppers',
-    },
-    {
-        id: 6,
-        name: 'Black Olives',
-    },
-    {
-        id: 7,
-        name: 'Pineapple',
-    },
-    {
-        id: 8,
-        name: 'Spinach',
-    },
-]
+    { id: 1, name: 'Pepperoni' },
+    { id: 2, name: 'Sausage' },
+    { id: 3, name: 'Mushrooms' },
+    { id: 4, name: 'Onions' },
+    { id: 5, name: 'Green Peppers' },
+    { id: 6, name: 'Black Olives' },
+    { id: 7, name: 'Pineapple' },
+    { id: 8, name: 'Spinach' },
+];
 
 export default function Toppings() {
     const [toppings, setToppings] = useState(initialToppings)
     const [newTopping, setNewTopping] = useState('')
     const [editingId, setEditingId] = useState(null)
     const [editingName, setEditingName] = useState('')
-    const editInputRef = useRef(null)
 
     const addTopping = (e) => {
         e.preventDefault()
