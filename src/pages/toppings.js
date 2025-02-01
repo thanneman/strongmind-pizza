@@ -68,17 +68,17 @@ export default function Toppings() {
                 </button>
                 <div className='flex flex-col mt-5 gap-y-3'>
                     <h2 className='text-xl font-medium text-center'>Available Toppings</h2>
-                    <div className='grid grid-cols-1 gap-4 sm:grid-cols-2'>
+                    <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
                         {toppings.map((topping) => (
                             <div key={topping.id} className='flex flex-col p-4 border rounded shadow-sm'>
                                 <div className='flex items-center justify-between'>
-                                    <h3 className='font-semibold text-md'>{topping.name}</h3>
+                                    <h3 className='text-sm font-semibold md:text-base'>{topping.name}</h3>
                                     <div className='flex gap-x-2'>
-                                        <button onClick={() => openDialog(topping)} className='flex justify-center items-center gap-x-0.5 px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
+                                        <button onClick={() => openDialog(topping)} className='flex justify-center items-center gap-x-0.5 text-sm md:text-base px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"></path></svg>
                                             Edit
                                         </button>
-                                        <button onClick={() => deleteTopping(topping.id)} className='flex justify-center items-center gap-x-0.5 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
+                                        <button onClick={() => deleteTopping(topping.id)} className='flex justify-center items-center gap-x-0.5 text-sm md:text-base px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"></path></svg>
                                             Delete
                                         </button>
@@ -92,7 +92,7 @@ export default function Toppings() {
 
             {isDialogOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                    <div className='absolute flex flex-col w-1/2 p-6 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded shadow-md top-1/2 left-1/2'>
+                    <div className='absolute flex flex-col w-3/4 p-6 max-w-[600px] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded shadow-md md:w-1/2 top-1/2 left-1/2'>
                         <div className='flex items-start justify-between'>
                             <h2 className='mb-4 text-xl font-semibold'>{editingId ? 'Edit Topping' : 'Add Topping'}</h2>
                             <button onClick={closeDialog} className='text-black'>
@@ -109,7 +109,7 @@ export default function Toppings() {
                                     className='p-2 border rounded'
                                 />
                                 <button type='submit' className='py-2 text-white bg-blue-500 rounded hover:bg-blue-600'>
-                                    {editingId ? 'Save' : 'Add'}
+                                    {editingId ? 'Update Topping' : 'Add Topping'}
                                 </button>
                             </form>
                         </div>
