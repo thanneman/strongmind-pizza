@@ -35,8 +35,9 @@ export default function Pizzas() {
             pizza.toppings.length === newPizza.toppings.length &&
             pizza.toppings.every((topping) => newPizza.toppings.includes(topping))
         )) {
-            alert('Pizza with these toppings already exists')
-            return
+            if (!window.confirm('Pizza with these toppings already exists. Do you want to add it anyway?')) {
+                return
+            }
         }
         setPizzas([...pizzas, { id: pizzas.length + 1, ...newPizza }])
         setNewPizza({ name: '', toppings: [] })
@@ -47,6 +48,14 @@ export default function Pizzas() {
         if (pizzas.some((pizza) => pizza.name.toLowerCase() === newPizza.name.toLowerCase() && pizza.id !== id)) {
             alert('Pizza already exists')
             return
+        }
+        if (pizzas.some((pizza) => 
+            pizza.toppings.length === newPizza.toppings.length &&
+            pizza.toppings.every((topping) => newPizza.toppings.includes(topping))
+        )) {
+            if (!window.confirm('Pizza with these toppings already exists. Do you want to add it anyway?')) {
+                return
+            }
         }
         setPizzas(pizzas.map((pizza) =>
             pizza.id === id ? { ...pizza, name: newPizza.name, toppings: newPizza.toppings } : pizza
@@ -76,9 +85,9 @@ export default function Pizzas() {
     }
 
     const closeDialog = () => {
-        setNewPizza({ name: '', toppings: [] });
-        setEditingId(null);
-        setIsDialogOpen(false);
+        setNewPizza({ name: '', toppings: [] })
+        setEditingId(null)
+        setIsDialogOpen(false)
     };
 
     return (
