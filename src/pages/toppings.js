@@ -47,13 +47,14 @@ export default function Toppings() {
     }
 
     const openDialog = (topping = { name: '' }) => {
-        setNewTopping(topping.name)
+        setEditingName(topping.name)
         setEditingId(topping.id || null)
         setIsDialogOpen(true)
     }
 
     const closeDialog = () => {
         setNewTopping('')
+        setEditingName('')
         setEditingId(null)
         setIsDialogOpen(false)
     }
@@ -103,8 +104,8 @@ export default function Toppings() {
                             <form onSubmit={(e) => { e.preventDefault(); editingId ? updateTopping(editingId) : addTopping(); }} className='flex flex-col mt-4 gap-y-4'>
                                 <input
                                     type='text'
-                                    value={newTopping}
-                                    onChange={(e) => setNewTopping(e.target.value)}
+                                    value={editingId ? editingName : newTopping}
+                                    onChange={(e) => editingId ? setEditingName(e.target.value) : setNewTopping(e.target.value)}
                                     placeholder='Topping name'
                                     className='p-2 border rounded'
                                 />

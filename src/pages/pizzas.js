@@ -103,7 +103,7 @@ export default function Pizzas() {
                     <ul className='flex flex-col w-full gap-y-3'>
                         {pizzas.map((pizza) => (
                             <div key={pizza.id} className='p-4 border rounded shadow-sm'>
-                                <div className='flex justify-between'>
+                                <div className='flex flex-col items-center justify-between xs:flex-row gap-y-2'>
                                     <h3 className='text-base font-semibold md:text-lg'>{pizza.name}</h3>
                                     <div className='flex gap-x-2'>
                                         <button onClick={() => openDialog(pizza)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
@@ -116,7 +116,7 @@ export default function Pizzas() {
                                         </button>
                                     </div>
                                 </div>
-                                <div className='flex flex-wrap gap-2 mt-2'>
+                                <div className='flex flex-wrap gap-2 mt-2.5'>
                                     {pizza.toppings.map((toppingId) => {
                                         const topping = availableToppings.find((t) => t.id === toppingId);
                                         return <span key={toppingId} className='px-2 py-1 text-xs bg-gray-200 rounded'>{topping.name}</span>;
