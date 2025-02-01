@@ -27,6 +27,10 @@ export default function Pizzas() {
 
     const addPizza = () => {
         if (newPizza.name.trim() === '') return
+        if (newPizza.toppings.length === 0) {
+            alert('Please select at least one topping')
+            return
+        }
         if (pizzas.some((pizza) => pizza.name.toLowerCase() === newPizza.name.toLowerCase())) {
             alert('Pizza name already exists')
             return
@@ -45,6 +49,11 @@ export default function Pizzas() {
     }
 
     const updatePizza = (id) => {
+        if (newPizza.name.trim() === '') return
+        if (newPizza.toppings.length === 0) {
+            alert('Please select at least one topping')
+            return
+        }
         if (pizzas.some((pizza) => pizza.name.toLowerCase() === newPizza.name.toLowerCase() && pizza.id !== id)) {
             alert('Pizza already exists')
             return

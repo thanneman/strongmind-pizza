@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import supabase from '@/lib/supabase'
+import { createClient } from '@/lib/supabase'
 
 export function useToppings() {
+    const supabase = createClient()
     const [toppings, setToppings] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -26,11 +27,13 @@ export function useToppings() {
     async function addTopping(name) {
         setLoading(true)
         try {
-            const { data, error } = await supabase.from('toppings').insert([{ name: name.trim() }])
+            const { data, error } = await supabase.from('toppings').insert([{ name: name.trim() }]).select()
             if (error) throw error
             setToppings([...toppings, ...data])
+            return data[0]
         } catch (error) {
             setError(error.message)
+            return null
         } finally {
             setLoading(false)
         }

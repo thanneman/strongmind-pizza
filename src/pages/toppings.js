@@ -1,49 +1,40 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/global/layout'
-
-const initialToppings = [
-    { id: 1, name: 'Pepperoni' },
-    { id: 2, name: 'Sausage' },
-    { id: 3, name: 'Mushrooms' },
-    { id: 4, name: 'Onions' },
-    { id: 5, name: 'Green Peppers' },
-    { id: 6, name: 'Black Olives' },
-    { id: 7, name: 'Pineapple' },
-    { id: 8, name: 'Spinach' },
-]
+import { useToppings } from '@/hooks/useToppings'
 
 export default function Toppings() {
-    const [toppings, setToppings] = useState(initialToppings)
+    const { toppings, loading, error, addTopping, updateTopping, deleteTopping } = useToppings()
     const [newTopping, setNewTopping] = useState('')
     const [editingId, setEditingId] = useState(null)
     const [editingName, setEditingName] = useState('')
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-    const addTopping = (e) => {
+    const handleAddTopping = async (e) => {
         if (newTopping.trim() === '') return
         if (toppings.some((topping) => topping.name.toLowerCase() === newTopping.toLowerCase())) {
             alert('Topping already exists')
             return
         }
-        setToppings([...toppings, { id: toppings.length + 1, name: newTopping }])
+        await addTopping(newTopping)
         setNewTopping('')
         setIsDialogOpen(false)
     }
 
-    const updateTopping = (id) => {
+    const handleUpdateTopping = (id) => {
         if (toppings.some((topping) => topping.name.toLowerCase() === editingName.toLowerCase())) {
             alert('Topping already exists')
             return
         }
-        setToppings(toppings.map((topping) => (topping.id === id ? { ...topping, name: editingName } : topping)))
+        // setToppings(toppings.map((topping) => (topping.id === id ? { ...topping, name: editingName } : topping)))
+        updateTopping(id, editingName)
         setEditingId(null)
         setEditingName('')
         setIsDialogOpen(false)
     }
 
-    const deleteTopping = (id) => {
-        setToppings(toppings.filter((topping) => topping.id !== id))
+    const handleDeleteTopping = (id) => {
+        deleteTopping(id)
     }
 
     const openDialog = (topping = { name: '' }) => {
@@ -70,23 +61,38 @@ export default function Toppings() {
                 <div className='flex flex-col mt-5 gap-y-3'>
                     <h2 className='text-xl font-medium text-center'>Available Toppings</h2>
                     <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
-                        {toppings.map((topping) => (
-                            <div key={topping.id} className='flex flex-col p-4 border rounded shadow-sm'>
-                                <div className='flex items-center justify-between'>
-                                    <h3 className='text-sm font-semibold md:text-base'>{topping.name}</h3>
-                                    <div className='flex gap-x-2'>
-                                        <button onClick={() => openDialog(topping)} className='flex justify-center items-center gap-x-0.5 text-sm md:text-base px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"></path></svg>
-                                            Edit
-                                        </button>
-                                        <button onClick={() => deleteTopping(topping.id)} className='flex justify-center items-center gap-x-0.5 text-sm md:text-base px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"></path></svg>
-                                            Delete
-                                        </button>
+                        {loading ? (
+                            Array(6).fill().map((_, index) => (
+                                <div key={index} className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
+                                    <div className='flex items-center justify-between'>
+                                        <div className='w-1/2 h-4 bg-gray-100 rounded'></div>
+                                        <div className='flex gap-x-2'>
+                                            <div className='w-10 h-6 bg-gray-100 rounded'></div>
+                                            <div className='w-10 h-6 bg-gray-100 rounded'></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        ) : (
+                            toppings.map((topping) => (
+                                <div key={topping.id} className='flex flex-col p-4 border rounded shadow-sm'>
+                                    <div className='flex items-center justify-between'>
+                                        <h3 className='text-sm font-semibold md:text-base'>{topping.name}</h3>
+                                        <div className='flex gap-x-2'>
+                                            <button onClick={() => openDialog(topping)} className='flex justify-center items-center gap-x-0.5 text-sm md:text-base px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"></path></svg>
+                                                Edit
+                                            </button>
+                                            <button onClick={() => handleDeleteTopping(topping.id)} className='flex justify-center items-center gap-x-0.5 text-sm md:text-base px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"></path></svg>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                        {error && <p className='text-red-500'>Error: {error}</p>}
                     </div>
                 </div>
             </div>
@@ -101,7 +107,7 @@ export default function Toppings() {
                             </button>
                         </div>
                         <div>
-                            <form onSubmit={(e) => { e.preventDefault(); editingId ? updateTopping(editingId) : addTopping(); }} className='flex flex-col mt-4 gap-y-4'>
+                            <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdateTopping(editingId) : handleAddTopping(); }} className='flex flex-col mt-4 gap-y-4'>
                                 <input
                                     type='text'
                                     value={editingId ? editingName : newTopping}
