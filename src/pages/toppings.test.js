@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom'
-import Toppings from '../pages/Toppings'
+import Toppings from '../pages/toppings'
 import { useToppings } from '@/hooks/useToppings'
 
 jest.mock('@/hooks/useToppings')
