@@ -26,7 +26,6 @@ export default function Toppings() {
             alert('Topping already exists')
             return
         }
-        // setToppings(toppings.map((topping) => (topping.id === id ? { ...topping, name: editingName } : topping)))
         updateTopping(id, editingName)
         setEditingId(null)
         setEditingName('')

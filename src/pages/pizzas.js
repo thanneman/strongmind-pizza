@@ -1,31 +1,17 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/global/layout'
-
-const initialToppings = [
-    { id: 1, name: 'Pepperoni' },
-    { id: 2, name: 'Sausage' },
-    { id: 3, name: 'Mushrooms' },
-    { id: 4, name: 'Onions' },
-    { id: 5, name: 'Green Peppers' },
-    { id: 6, name: 'Black Olives' },
-    { id: 7, name: 'Pineapple' },
-    { id: 8, name: 'Spinach' },
-]
-
-const initialPizzas = [
-    { id: 1, name: 'Pepperoni Onion', toppings: [1, 4] },
-    { id: 2, name: 'Pineapple', toppings: [7] },
-]
+import { usePizzas } from '@/hooks/usePizzas'
+import { useToppings } from '@/hooks/useToppings'
 
 export default function Pizzas() {
-    const [pizzas, setPizzas] = useState(initialPizzas)
+    const { pizzas, loading, error, addPizza, updatePizza, deletePizza } = usePizzas()
+    const { toppings: availableToppings } = useToppings()
     const [newPizza, setNewPizza] = useState({ name: '', toppings: [] })
-    const [availableToppings, setAvailableToppings] = useState(initialToppings)
     const [editingId, setEditingId] = useState(null)
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const addPizza = () => {
+    const handleAddPizza = async () => {
         if (newPizza.name.trim() === '') return
         if (newPizza.toppings.length === 0) {
             alert('Please select at least one topping')
@@ -43,12 +29,12 @@ export default function Pizzas() {
                 return
             }
         }
-        setPizzas([...pizzas, { id: pizzas.length + 1, ...newPizza }])
+        await addPizza(newPizza.name, newPizza.toppings)
         setNewPizza({ name: '', toppings: [] })
         setIsDialogOpen(false)
     }
 
-    const updatePizza = (id) => {
+    const handleUpdatePizza = (id) => {
         if (newPizza.name.trim() === '') return
         if (newPizza.toppings.length === 0) {
             alert('Please select at least one topping')
@@ -66,9 +52,7 @@ export default function Pizzas() {
                 return
             }
         }
-        setPizzas(pizzas.map((pizza) =>
-            pizza.id === id ? { ...pizza, name: newPizza.name, toppings: newPizza.toppings } : pizza
-        ))
+        updatePizza(id, newPizza.name, newPizza.toppings)
         setEditingId(null)
         setNewPizza({ name: '', toppings: [] })
         setIsDialogOpen(false)
@@ -83,8 +67,8 @@ export default function Pizzas() {
         }))
     }
 
-    const deletePizza = (id) => {
-        setPizzas(pizzas.filter((pizza) => pizza.id !== id))
+    const handleDeletePizza = (id) => {
+        deletePizza(id)
     }
 
     const openDialog = (pizza = { name: '', toppings: [] }) => {
@@ -119,7 +103,7 @@ export default function Pizzas() {
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"></path></svg>
                                             Edit
                                         </button>
-                                        <button onClick={() => deletePizza(pizza.id)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
+                                        <button onClick={() => handleDeletePizza(pizza.id)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"></path></svg>
                                             Delete
                                         </button>
@@ -127,7 +111,8 @@ export default function Pizzas() {
                                 </div>
                                 <div className='flex flex-wrap gap-2 mt-2.5'>
                                     {pizza.toppings.map((toppingId) => {
-                                        const topping = availableToppings.find((t) => t.id === toppingId);
+                                        const topping = availableToppings.find((t) => t.id === toppingId)
+                                        if (!topping) return null
                                         return <span key={toppingId} className='px-2 py-1 text-xs bg-gray-200 rounded'>{topping.name}</span>;
                                     })}
                                 </div>
@@ -146,7 +131,7 @@ export default function Pizzas() {
                             </button>
                         </div>
                         <div>
-                            <form onSubmit={(e) => { e.preventDefault(); editingId ? updatePizza(editingId) : addPizza(); }} className='flex flex-col gap-y-4'>
+                            <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdatePizza(editingId) : handleAddPizza(); }} className='flex flex-col gap-y-4'>
                                 <input
                                     type='text'
                                     value={newPizza.name}
