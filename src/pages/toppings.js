@@ -59,7 +59,7 @@ export default function Toppings() {
                 </button>
                 <div className='flex flex-col mt-5 gap-y-3'>
                     <h2 className='text-xl font-medium text-center'>Available Toppings</h2>
-                    <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+                    <div className='grid grid-cols-1 gap-3 text-center sm:grid-cols-2'>
                         {loading ? (
                             Array(6).fill().map((_, index) => (
                                 <div key={index} className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
@@ -93,6 +93,7 @@ export default function Toppings() {
                         )}
                         {error && <p className='text-red-500'>Error: {error}</p>}
                     </div>
+                    {toppings.length === 0 && !loading  && <p className='flex justify-center text-center'>No toppings found. Create a new topping from the Create New Topping button above.</p>}
                 </div>
             </div>
 

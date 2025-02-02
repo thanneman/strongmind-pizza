@@ -94,30 +94,50 @@ export default function Pizzas() {
                 <div className='flex flex-col mt-5 gap-y-3'>
                     <h2 className='text-xl font-medium text-center'>Available Pizzas</h2>
                     <ul className='flex flex-col w-full gap-y-3'>
-                        {pizzas.map((pizza) => (
-                            <div key={pizza.id} className='p-4 border rounded shadow-sm'>
-                                <div className='flex flex-col items-center justify-between xs:flex-row gap-y-2'>
-                                    <h3 className='text-base font-semibold md:text-lg'>{pizza.name}</h3>
-                                    <div className='flex gap-x-2'>
-                                        <button onClick={() => openDialog(pizza)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"></path></svg>
-                                            Edit
-                                        </button>
-                                        <button onClick={() => handleDeletePizza(pizza.id)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"></path></svg>
-                                            Delete
-                                        </button>
+                        {loading ? (
+                            Array(4).fill().map((_, index) => (
+                                <div key={index} className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
+                                    <div className='flex flex-col items-center justify-between xs:flex-row gap-y-2'>
+                                        <div className='w-1/2 h-4 bg-gray-100 rounded'></div>
+                                        <div className='flex gap-x-2'>
+                                            <div className='w-10 h-6 bg-gray-100 rounded'></div>
+                                            <div className='w-10 h-6 bg-gray-100 rounded'></div>
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-col items-center justify-between mt-2 xs:flex-row gap-y-2'>
+                                        <div className='w-1/3 h-4 bg-gray-100 rounded'></div>
+                                        <div className='w-1/3 h-4 bg-gray-100 rounded'></div>
                                     </div>
                                 </div>
-                                <div className='flex flex-wrap gap-2 mt-2.5'>
-                                    {pizza.toppings.map((toppingId) => {
-                                        const topping = availableToppings.find((t) => t.id === toppingId)
-                                        if (!topping) return null
-                                        return <span key={toppingId} className='px-2 py-1 text-xs bg-gray-200 rounded'>{topping.name}</span>;
-                                    })}
+                            ))
+                        ) : (
+                            pizzas.map((pizza) => (
+                                <div key={pizza.id} className='p-4 border rounded shadow-sm'>
+                                    <div className='flex flex-col items-center justify-between xs:flex-row gap-y-2'>
+                                        <h3 className='text-base font-semibold md:text-lg'>{pizza.name}</h3>
+                                        <div className='flex gap-x-2'>
+                                            <button onClick={() => openDialog(pizza)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19h1.425L16.2 9.225L14.775 7.8L5 17.575zm-1 2q-.425 0-.712-.288T3 20v-2.425q0-.4.15-.763t.425-.637L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.437.65T21 6.4q0 .4-.138.763t-.437.662l-12.6 12.6q-.275.275-.638.425t-.762.15zM19 6.4L17.6 5zm-3.525 2.125l-.7-.725L16.2 9.225z"></path></svg>
+                                                Edit
+                                            </button>
+                                            <button onClick={() => handleDeletePizza(pizza.id)} className='flex justify-center text-sm md:text-base items-center gap-x-0.5 px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600'>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="1.3em" height="1.3em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6q-.425 0-.712-.288T4 5t.288-.712T5 4h4q0-.425.288-.712T10 3h4q.425 0 .713.288T15 4h4q.425 0 .713.288T20 5t-.288.713T19 6v13q0 .825-.587 1.413T17 21zm3-4q.425 0 .713-.288T11 16V9q0-.425-.288-.712T10 8t-.712.288T9 9v7q0 .425.288.713T10 17m4 0q.425 0 .713-.288T15 16V9q0-.425-.288-.712T14 8t-.712.288T13 9v7q0 .425.288.713T14 17"></path></svg>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className='flex flex-wrap gap-2 mt-2.5'>
+                                        {pizza.toppings.map((toppingId) => {
+                                            const topping = availableToppings.find((t) => t.id === toppingId)
+                                            if (!topping) return null
+                                            return <span key={toppingId} className='px-2 py-1 text-xs bg-gray-200 rounded'>{topping.name}</span>;
+                                        })}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        )}
+                        {error && <p className='text-red-500'>Error: {error}</p>}
+                        {pizzas.length === 0 && !loading && <p className='text-center'>No pizzas found. Create a new pizza from the Create New Pizza button above.</p>}
                     </ul>
                 </div>
             </div>
