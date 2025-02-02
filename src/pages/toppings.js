@@ -62,7 +62,7 @@ export default function Toppings() {
                     <div className='grid grid-cols-1 gap-3 text-center sm:grid-cols-2'>
                         {loading ? (
                             Array(6).fill().map((_, index) => (
-                                <div key={index} className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
+                                <div key={index} role='status' className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
                                     <div className='flex items-center justify-between'>
                                         <div className='w-1/2 h-4 bg-gray-100 rounded'></div>
                                         <div className='flex gap-x-2'>
@@ -107,7 +107,7 @@ export default function Toppings() {
                             </button>
                         </div>
                         <div>
-                            <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdateTopping(editingId) : handleAddTopping(); }} className='flex flex-col mt-4 gap-y-4'>
+                            <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdateTopping(editingId) : handleAddTopping(); }} role='form' className='flex flex-col mt-4 gap-y-4'>
                                 <input
                                     type='text'
                                     value={editingId ? editingName : newTopping}
