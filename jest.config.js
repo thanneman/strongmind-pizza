@@ -5,6 +5,12 @@ module.exports = {
       '^@/(.*)$': '<rootDir>/src/$1',
     },
     transform: {
-      '^.+\\.jsx?$': 'babel-jest',
+      '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
     },
-  }
+    testEnvironmentOptions: {
+      customExportConditions: [''],
+    },
+    extensionsToTreatAsEsm: ['.jsx', '.ts', '.tsx'],
+    testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
+    moduleFileExtensions: ['js', 'jsx', 'json', 'node']
+}
