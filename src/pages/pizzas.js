@@ -1,18 +1,25 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/global/layout'
 import { usePizzas } from '@/hooks/usePizzas'
 import { useToppings } from '@/hooks/useToppings'
+import { useTrapFocus } from '@/hooks/useTrapFocus'
 
 export default function Pizzas() {
     const { pizzas, loading, error, addPizza, updatePizza, deletePizza } = usePizzas()
     const { toppings: availableToppings } = useToppings()
     const [newPizza, setNewPizza] = useState({ name: '', toppings: [] })
     const [editingId, setEditingId] = useState(null)
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const dialogRef = useRef(null)
+    const inputRef = useRef(null)
+    useTrapFocus(dialogRef, isDialogOpen)
 
     const handleAddPizza = async () => {
-        if (newPizza.name.trim() === '') return
+        if (newPizza.name.trim() === '') {
+            alert('Please enter a pizza name')
+            return
+        }
         if (newPizza.toppings.length === 0) {
             alert('Please select at least one topping')
             return
@@ -35,7 +42,10 @@ export default function Pizzas() {
     }
 
     const handleUpdatePizza = (id) => {
-        if (newPizza.name.trim() === '') return
+        if (newPizza.name.trim() === '') {
+            alert('Please enter a pizza name')
+            return
+        }
         if (newPizza.toppings.length === 0) {
             alert('Please select at least one topping')
             return
@@ -81,7 +91,13 @@ export default function Pizzas() {
         setNewPizza({ name: '', toppings: [] })
         setEditingId(null)
         setIsDialogOpen(false)
-    };
+    }
+
+    useEffect(() => {
+        if (isDialogOpen && inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [isDialogOpen])
 
     return (
         <main className='container max-w-4xl py-6'>
@@ -143,7 +159,7 @@ export default function Pizzas() {
             </div>
             {isDialogOpen && (
                 <div className='fixed inset-0 flex justify-center item-center bg-black/50'>
-                    <div className='absolute flex flex-col w-3/4 lg:w-1/2 max-w-[600px] p-6 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded shadow-md top-1/2 left-1/2'>
+                    <div ref={dialogRef} role='dialog' aria-modal='true' className='absolute flex flex-col w-3/4 lg:w-1/2 max-w-[600px] p-6 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded shadow-md top-1/2 left-1/2'>
                         <div className='flex items-start justify-between'>
                             <h2 className='mb-4 text-xl font-semibold'>{editingId ? 'Edit Pizza' : 'Add Pizza'}</h2>
                             <button onClick={closeDialog} className='text-black'>
@@ -155,6 +171,7 @@ export default function Pizzas() {
                                 <label className='sr-only'>Pizza Name</label>
                                 <input
                                     type='text'
+                                    ref={inputRef}
                                     value={newPizza.name}
                                     onChange={(e) => setNewPizza({ ...newPizza, name: e.target.value })}
                                     placeholder='Pizza Name'

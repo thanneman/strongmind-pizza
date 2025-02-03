@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/global/layout'
 import { useToppings } from '@/hooks/useToppings'
+import { useTrapFocus } from '@/hooks/useTrapFocus'
 
 export default function Toppings() {
     const { toppings, loading, error, addTopping, updateTopping, deleteTopping } = useToppings()
@@ -9,9 +10,15 @@ export default function Toppings() {
     const [editingId, setEditingId] = useState(null)
     const [editingName, setEditingName] = useState('')
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const dialogRef = useRef(null)
+    const inputRef = useRef(null)
+    useTrapFocus(dialogRef, isDialogOpen)
 
     const handleAddTopping = async (e) => {
-        if (newTopping.trim() === '') return
+        if (newTopping.trim() === '') {
+            alert('Topping name is required')
+            return
+        }
         if (toppings.some((topping) => topping.name.toLowerCase() === newTopping.toLowerCase())) {
             alert('Topping already exists')
             return
@@ -22,6 +29,10 @@ export default function Toppings() {
     }
 
     const handleUpdateTopping = (id) => {
+        if (newTopping.trim() === '') {
+            alert('Topping name is required')
+            return
+        }
         if (toppings.some((topping) => topping.name.toLowerCase() === editingName.toLowerCase())) {
             alert('Topping already exists')
             return
@@ -48,6 +59,12 @@ export default function Toppings() {
         setEditingId(null)
         setIsDialogOpen(false)
     }
+
+    useEffect(() => {
+        if (isDialogOpen && inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [isDialogOpen])
 
     return (
         <main className='container max-w-4xl py-6'>
@@ -91,7 +108,7 @@ export default function Toppings() {
                                 </div>
                             ))
                         )}
-                        {error && <p className='text-red-500'>Error: {error}</p>}
+                        {error && <p role='alert' className='text-red-500'>Error: {error}</p>}
                     </div>
                     {toppings.length === 0 && !loading  && <p className='flex justify-center text-center'>No toppings found. Create a new topping from the Create New Topping button above.</p>}
                 </div>
@@ -99,7 +116,7 @@ export default function Toppings() {
 
             {isDialogOpen && (
                 <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
-                    <div className='absolute flex flex-col w-3/4 p-6 max-w-[600px] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded shadow-md md:w-1/2 top-1/2 left-1/2'>
+                    <div ref={dialogRef} className='absolute flex flex-col w-3/4 p-6 max-w-[600px] transform -translate-x-1/2 -translate-y-1/2 bg-white rounded shadow-md md:w-1/2 top-1/2 left-1/2'>
                         <div className='flex items-start justify-between'>
                             <h2 className='mb-4 text-xl font-semibold'>{editingId ? 'Edit Topping' : 'Add Topping'}</h2>
                             <button onClick={closeDialog} className='text-black'>
@@ -111,6 +128,7 @@ export default function Toppings() {
                             <label className='sr-only'>Topping Name</label>
                                 <input
                                     type='text'
+                                    ref={inputRef}
                                     value={editingId ? editingName : newTopping}
                                     onChange={(e) => editingId ? setEditingName(e.target.value) : setNewTopping(e.target.value)}
                                     placeholder='Topping name'
