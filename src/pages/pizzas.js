@@ -96,7 +96,7 @@ export default function Pizzas() {
                     <ul className='flex flex-col w-full gap-y-3'>
                         {loading ? (
                             Array(4).fill().map((_, index) => (
-                                <div key={index} className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
+                                <div key={index} role='status' className='flex flex-col p-4 border rounded shadow-sm animate-pulse'>
                                     <div className='flex flex-col items-center justify-between xs:flex-row gap-y-2'>
                                         <div className='w-1/2 h-4 bg-gray-100 rounded'></div>
                                         <div className='flex gap-x-2'>
@@ -151,7 +151,8 @@ export default function Pizzas() {
                             </button>
                         </div>
                         <div>
-                            <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdatePizza(editingId) : handleAddPizza(); }} className='flex flex-col gap-y-4'>
+                            <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdatePizza(editingId) : handleAddPizza(); }} role='form' className='flex flex-col gap-y-4'>
+                                <label className='sr-only'>Pizza Name</label>
                                 <input
                                     type='text'
                                     value={newPizza.name}

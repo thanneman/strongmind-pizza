@@ -108,6 +108,7 @@ export default function Toppings() {
                         </div>
                         <div>
                             <form onSubmit={(e) => { e.preventDefault(); editingId ? handleUpdateTopping(editingId) : handleAddTopping(); }} role='form' className='flex flex-col mt-4 gap-y-4'>
+                            <label className='sr-only'>Topping Name</label>
                                 <input
                                     type='text'
                                     value={editingId ? editingName : newTopping}
