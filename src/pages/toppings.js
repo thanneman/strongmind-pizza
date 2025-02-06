@@ -29,7 +29,7 @@ export default function Toppings() {
     }
 
     const handleUpdateTopping = (id) => {
-        if (newTopping.trim() === '') {
+        if (editingName.trim() === '') {
             alert('Topping name is required')
             return
         }
